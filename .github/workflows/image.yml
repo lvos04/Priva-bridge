@@ -2,6 +2,8 @@ name: Image publiceren
 # ghcr.io/lvos04/priva-bridge
 # - push naar een `ccr-*`-branch: tags `<versie>-rc`, `branch-<naam>` en `sha-<kort>`; nooit `latest`.
 # - push naar de standaardbranch of een tag `v*`: `<versie>` en `latest`.
+#   Een `ccr-*`-branch geeft nooit een release-tag, ook niet als hij (zoals bij een lege repository)
+#   de standaardbranch is geworden.
 # De versie komt uit één bron: bridge/__init__.py.
 on:
   push:
@@ -22,7 +24,9 @@ jobs:
       - name: Soort build
         id: soort
         run: |
-          if [[ "$GITHUB_REF" == refs/tags/v* || "$GITHUB_REF" == "refs/heads/${{ github.event.repository.default_branch }}" ]]; then
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "release=true" >> "$GITHUB_OUTPUT"
+          elif [[ "$GITHUB_REF_NAME" != ccr-* && "$GITHUB_REF" == "refs/heads/${{ github.event.repository.default_branch }}" ]]; then
             echo "release=true" >> "$GITHUB_OUTPUT"
           else
             echo "release=false" >> "$GITHUB_OUTPUT"
