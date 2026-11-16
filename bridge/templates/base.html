@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titel %}Priva Bridge{% endblock %} · Priva Bridge</title>
+<style>
+:root { --tekst:#1d2521; --zacht:#5d6b63; --lijn:#d9e0dc; --vlak:#f5f7f6; --groen:#2f7d4f; --oranje:#b26b00; --rood:#b3261e; --accent:#245c8f; }
+* { box-sizing: border-box; }
+body { margin:0; font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color:var(--tekst); background:#fff; }
+header { display:flex; gap:1.5rem; align-items:center; padding:.75rem 1.25rem; border-bottom:1px solid var(--lijn); background:var(--vlak); flex-wrap:wrap; }
+header strong { font-size:1.05rem; }
+header nav { display:flex; gap:1rem; flex:1; flex-wrap:wrap; }
+header a { color:var(--accent); text-decoration:none; }
+main { max-width:1100px; margin:0 auto; padding:1.25rem; }
+h1 { font-size:1.4rem; margin:.2rem 0 1rem; } h2 { font-size:1.1rem; margin:1.6rem 0 .6rem; }
+table { border-collapse:collapse; width:100%; font-size:.92rem; }
+th, td { text-align:left; padding:.35rem .5rem; border-bottom:1px solid var(--lijn); vertical-align:top; }
+th { color:var(--zacht); font-weight:600; }
+.kaart { border:1px solid var(--lijn); border-radius:8px; padding:.8rem 1rem; background:#fff; }
+.kaarten { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:.75rem; }
+.kaart .label { color:var(--zacht); font-size:.85rem; } .kaart .waarde { font-size:1.25rem; font-weight:600; }
+.kalender { display:grid; grid-template-columns:repeat(auto-fill,minmax(64px,1fr)); gap:4px; }
+.dag { border-radius:6px; padding:.3rem; font-size:.78rem; text-align:center; color:#fff; }
+.compleet { background:var(--groen); } .onvolledig { background:var(--oranje); } .ontbreekt { background:#8a8f8c; }
+.melding { border-left:4px solid var(--oranje); background:#fff8ec; padding:.5rem .75rem; margin:.4rem 0; }
+.melding.fout { border-color:var(--rood); background:#fdeeed; }
+.melding.ok { border-color:var(--groen); background:#eef7f1; }
+.badge { display:inline-block; padding:0 .45rem; border-radius:99px; font-size:.8rem; background:var(--vlak); border:1px solid var(--lijn); }
+button, .knop { font:inherit; padding:.45rem .9rem; border-radius:6px; border:1px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer; }
+button.licht { background:#fff; color:var(--accent); }
+input[type=text], input[type=password] { font:inherit; padding:.4rem .5rem; border:1px solid var(--lijn); border-radius:6px; min-width:16rem; }
+code { background:var(--vlak); padding:.05rem .3rem; border-radius:4px; }
+form.inline { display:inline; }
+.zacht { color:var(--zacht); }
+</style>
+</head>
+<body>
+<header>
+  <strong>Priva Bridge</strong>
+  {% if ingelogd %}
+  <nav><a href="/beheer">Status</a><a href="/beheer/upload">Upload</a><a href="/beheer/koppeling">Bedrijfskoppeling</a><a href="/api/v1/docs">API</a></nav>
+  <form class="inline" method="post" action="/beheer/logout"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="licht">Uitloggen</button></form>
+  {% endif %}
+  <span class="zacht">v{{ versie }}</span>
+</header>
+<main>{% block inhoud %}{% endblock %}</main>
+</body>
+</html>

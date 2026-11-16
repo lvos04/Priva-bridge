@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block titel %}Upload{% endblock %}
+{% block inhoud %}
+<h1>Priva-export uploaden</h1>
+<p>Upload één CSV-export uit de Priva-rapportage (Klimaat of Belichting). De Bridge herkent het rapport aan de inhoud en toont eerst een preview; er wordt pas iets opgeslagen als je op <em>Verwerken</em> klikt.</p>
+{% if fout %}<div class="melding fout">{{ fout }}</div>{% endif %}
+<form method="post" action="/beheer/upload" enctype="multipart/form-data">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <p><input type="file" name="bestand" accept=".csv,text/csv,text/plain" required></p>
+  <button>Uploaden en controleren</button>
+</form>
+{% endblock %}

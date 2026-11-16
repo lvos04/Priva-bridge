@@ -1,0 +1,141 @@
+label;pcu;type_1;idx_1;type_2;idx_2;startdate;enddate;value
+Ave_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;19,5
+Min_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;17,1
+Max_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;23,6
+Ave_Day_CompTemp;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;20,5
+Ave_Night_CompTemp;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;18,5
+Ave_24h_CompRV;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;70
+Ave_24h_CompHD;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;3,5
+Ave_24h_CompAV;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;12,25
+Ave_24h_DewPointDifference;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;3,75
+Sum_24h_PAR_Growlight;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;3,35
+Sum_24h_CalculatedRadiation;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;500
+Sum_24h_CalculatedPAR;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;
+Sum_24h_MeasuredPAR;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;0
+Ave_24h_CompCO2;SYNTHETISCH;Afdeling;1;;;19-10-26;19-10-26;0
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;1;19-10-26;19-10-26;60000
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;2;19-10-26;19-10-26;0
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;1;Doek;1;19-10-26;19-10-26;70001
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;2;Doek;1;19-10-26;19-10-26;70002
+Sum_24h_CO2Prog;SYNTHETISCH;CO2 doseerruimte;1;;;19-10-26;19-10-26;12,5
+Ave_24h_WaterTemp_Autonomous;SYNTHETISCH;Autonome verwarming;1;;;19-10-26;19-10-26;33
+Ave_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;19,75
+Min_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;17,35
+Max_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;23,85
+Ave_Day_CompTemp;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;20,75
+Ave_Night_CompTemp;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;18,75
+Ave_24h_CompRV;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;71
+Ave_24h_CompHD;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;3,6
+Ave_24h_CompAV;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;12,35
+Ave_24h_DewPointDifference;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;3,75
+Sum_24h_PAR_Growlight;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;3,36
+Sum_24h_CalculatedRadiation;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;510
+Sum_24h_CalculatedPAR;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;
+Sum_24h_MeasuredPAR;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;0
+Ave_24h_CompCO2;SYNTHETISCH;Afdeling;1;;;20-10-26;20-10-26;0
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;1;20-10-26;20-10-26;60060
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;2;20-10-26;20-10-26;0
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;1;Doek;1;20-10-26;20-10-26;70001
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;2;Doek;1;20-10-26;20-10-26;70002
+Sum_24h_CO2Prog;SYNTHETISCH;CO2 doseerruimte;1;;;20-10-26;20-10-26;0
+Ave_24h_WaterTemp_Autonomous;SYNTHETISCH;Autonome verwarming;1;;;20-10-26;20-10-26;33
+Ave_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;20
+Min_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;17,6
+Max_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;24,1
+Ave_Day_CompTemp;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;21
+Ave_Night_CompTemp;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;19
+Ave_24h_CompRV;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;72
+Ave_24h_CompHD;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;3,7
+Ave_24h_CompAV;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;12,45
+Ave_24h_DewPointDifference;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;3,75
+Sum_24h_PAR_Growlight;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;3,37
+Sum_24h_CalculatedRadiation;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;520
+Sum_24h_CalculatedPAR;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;
+Sum_24h_MeasuredPAR;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;0
+Ave_24h_CompCO2;SYNTHETISCH;Afdeling;1;;;21-10-26;21-10-26;0
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;1;21-10-26;21-10-26;60120
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;2;21-10-26;21-10-26;0
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;1;Doek;1;21-10-26;21-10-26;70001
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;2;Doek;1;21-10-26;21-10-26;70002
+Sum_24h_CO2Prog;SYNTHETISCH;CO2 doseerruimte;1;;;21-10-26;21-10-26;12,5
+Ave_24h_WaterTemp_Autonomous;SYNTHETISCH;Autonome verwarming;1;;;21-10-26;21-10-26;33
+Ave_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;20,25
+Min_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;17,85
+Max_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;24,35
+Ave_Day_CompTemp;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;21,25
+Ave_Night_CompTemp;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;19,25
+Ave_24h_CompRV;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;73
+Ave_24h_CompHD;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;3,8
+Ave_24h_CompAV;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;12,55
+Ave_24h_DewPointDifference;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;3,75
+Sum_24h_PAR_Growlight;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;3,38
+Sum_24h_CalculatedRadiation;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;530
+Sum_24h_CalculatedPAR;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;
+Sum_24h_MeasuredPAR;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;0
+Ave_24h_CompCO2;SYNTHETISCH;Afdeling;1;;;22-10-26;22-10-26;0
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;1;22-10-26;22-10-26;60180
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;2;22-10-26;22-10-26;0
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;1;Doek;1;22-10-26;22-10-26;70001
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;2;Doek;1;22-10-26;22-10-26;70002
+Sum_24h_CO2Prog;SYNTHETISCH;CO2 doseerruimte;1;;;22-10-26;22-10-26;0
+Ave_24h_WaterTemp_Autonomous;SYNTHETISCH;Autonome verwarming;1;;;22-10-26;22-10-26;33
+Ave_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;20,5
+Min_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;18,1
+Max_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;24,6
+Ave_Day_CompTemp;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;21,5
+Ave_Night_CompTemp;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;19,5
+Ave_24h_CompRV;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;74
+Ave_24h_CompHD;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;3,9
+Ave_24h_CompAV;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;12,65
+Ave_24h_DewPointDifference;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;3,75
+Sum_24h_PAR_Growlight;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;3,39
+Sum_24h_CalculatedRadiation;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;540
+Sum_24h_CalculatedPAR;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;
+Sum_24h_MeasuredPAR;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;0
+Ave_24h_CompCO2;SYNTHETISCH;Afdeling;1;;;23-10-26;23-10-26;0
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;1;23-10-26;23-10-26;60240
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;2;23-10-26;23-10-26;0
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;1;Doek;1;23-10-26;23-10-26;70001
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;2;Doek;1;23-10-26;23-10-26;70002
+Sum_24h_CO2Prog;SYNTHETISCH;CO2 doseerruimte;1;;;23-10-26;23-10-26;12,5
+Ave_24h_WaterTemp_Autonomous;SYNTHETISCH;Autonome verwarming;1;;;23-10-26;23-10-26;33
+Ave_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;20,75
+Min_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;18,35
+Max_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;24,85
+Ave_Day_CompTemp;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;21,75
+Ave_Night_CompTemp;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;19,75
+Ave_24h_CompRV;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;75
+Ave_24h_CompHD;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;4
+Ave_24h_CompAV;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;12,75
+Ave_24h_DewPointDifference;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;3,75
+Sum_24h_PAR_Growlight;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;3,4
+Sum_24h_CalculatedRadiation;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;550
+Sum_24h_CalculatedPAR;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;
+Sum_24h_MeasuredPAR;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;0
+Ave_24h_CompCO2;SYNTHETISCH;Afdeling;1;;;24-10-26;24-10-26;0
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;1;24-10-26;24-10-26;60300
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;2;24-10-26;24-10-26;0
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;1;Doek;1;24-10-26;24-10-26;70001
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;2;Doek;1;24-10-26;24-10-26;70002
+Sum_24h_CO2Prog;SYNTHETISCH;CO2 doseerruimte;1;;;24-10-26;24-10-26;0
+Ave_24h_WaterTemp_Autonomous;SYNTHETISCH;Autonome verwarming;1;;;24-10-26;24-10-26;33
+Ave_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;
+Min_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;
+Max_24h_CompTemp;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;
+Ave_Day_CompTemp;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;22
+Ave_Night_CompTemp;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;20
+Ave_24h_CompRV;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;76
+Ave_24h_CompHD;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;4,1
+Ave_24h_CompAV;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;12,85
+Ave_24h_DewPointDifference;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;3,75
+Sum_24h_PAR_Growlight;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;3,41
+Sum_24h_CalculatedRadiation;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;560
+Sum_24h_CalculatedPAR;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;
+Sum_24h_MeasuredPAR;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;0
+Ave_24h_CompCO2;SYNTHETISCH;Afdeling;1;;;25-10-26;25-10-26;0
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;1;25-10-26;25-10-26;60360
+Sum_24h_CurtainHours;SYNTHETISCH;Afdeling;1;Doek;2;25-10-26;25-10-26;0
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;1;Doek;1;25-10-26;25-10-26;70001
+Sum_24h_AutonomousCurtainHours;SYNTHETISCH;Autonoom doek;2;Doek;1;25-10-26;25-10-26;70002
+Sum_24h_CO2Prog;SYNTHETISCH;CO2 doseerruimte;1;;;25-10-26;25-10-26;12,5
+Ave_24h_WaterTemp_Autonomous;SYNTHETISCH;Autonome verwarming;1;;;25-10-26;25-10-26;33

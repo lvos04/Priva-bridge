@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titel %}{{ batch.import_id }}{% endblock %}
+{% block inhoud %}
+<h1>{{ batch.import_id }} · {{ batch.bestandsnaam }}</h1>
+{% if dubbel %}<div class="melding ok">Dit bestand is al eerder verwerkt (zelfde SHA-256). Er is niets opnieuw opgeslagen.</div>{% endif %}
+{% if batch.status == 'geweigerd' %}<div class="melding fout"><strong>Niet verwerkt.</strong> Het bestand is gestopt; er is niets opgeslagen. Het ruwe bestand staat in het archief voor een latere herimport.</div>
+{% elif batch.status == 'preview' %}<div class="melding">Preview — controleer en klik op <em>Verwerken</em>.</div>
+{% else %}<div class="melding ok">Verwerkt op {{ batch.verwerkt_op|lokaal }}.</div>{% endif %}
+
+<table>
+<tr><th>Herkend rapport</th><td>{{ familie if batch.rapportfamilie else 'niet herkend' }}</td></tr>
+<tr><th>Periode</th><td>{{ batch.periode_van or '–' }}{% if batch.periode_tot %} t/m {{ batch.periode_tot }}{% endif %} ({{ batch.aantallen.get('dagen', 0) }} dagen)</td></tr>
+<tr><th>Regels in bestand</th><td>{{ batch.aantallen.get('regels', '–') }}</td></tr>
+<tr><th>Dagwaarden</th><td>{{ batch.aantallen.get('waarden', '–') }} ({{ batch.aantallen.get('metrics', 0) }} meetwaarden)</td></tr>
+<tr><th>Lege velden (ontbreekt, niet 0)</th><td>{{ batch.aantallen.get('leeg', 0) }}</td></tr>
+<tr><th>Echte nullen</th><td>{{ batch.aantallen.get('nul', 0) }}</td></tr>
+<tr><th>Verdacht</th><td>{{ batch.aantallen.get('verdacht', 0) }}</td></tr>
+<tr><th>Overgeslagen (bekende lege kolommen)</th><td>{{ batch.aantallen.get('overgeslagen', 0) }}</td></tr>
+<tr><th>Afdelingen</th><td>{{ batch.aantallen.get('afdelingen', [])|join(', ') or '–' }}</td></tr>
+<tr><th>Bronnen</th><td>{% for k, v in batch.aantallen.get('bronnen', {}).items() %}{{ k }} {{ v }}{% if not loop.last %}; {% endif %}{% else %}–{% endfor %}</td></tr>
+<tr><th>Tekenset / scheiding</th><td>{{ batch.aantallen.get('encoding') }} / {{ batch.aantallen.get('scheidingsteken') }}</td></tr>
+<tr><th>SHA-256</th><td><code>{{ batch.sha256 }}</code></td></tr>
+{% if batch.status == 'verwerkt' %}
+<tr><th>Resultaat</th><td>nieuw {{ batch.aantallen.get('nieuw', 0) }}, nieuwe revisie {{ batch.aantallen.get('nieuwe_revisie', 0) }}, al aanwezig {{ batch.aantallen.get('al_aanwezig', 0) }}, leeg niet over bestaande waarde {{ batch.aantallen.get('leeg_niet_overschreven', 0) }}</td></tr>
+{% endif %}
+</table>
+
+<h2>Meldingen</h2>
+{% for m in batch.meldingen %}<div class="melding {{ 'fout' if m.niveau == 'fout' else '' }}"><strong>{{ m.code }}</strong> — {{ m.detail }}</div>
+{% else %}<div class="melding ok">Geen meldingen.</div>{% endfor %}
+
+{% if batch.status == 'preview' %}
+<form method="post" action="/beheer/imports/{{ batch.id }}/verwerken">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <p><button>Verwerken</button> <a href="/beheer/upload">Annuleren</a></p>
+</form>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block titel %}Inloggen{% endblock %}
+{% block inhoud %}
+<h1>Inloggen beheer</h1>
+{% if uitgeschakeld %}
+<div class="melding fout">Inloggen is uitgeschakeld: stel <code>BRIDGE_ADMIN_PASSWORD</code> in bij de app en start opnieuw.</div>
+{% endif %}
+{% if fout %}<div class="melding fout">{{ fout }}</div>{% endif %}
+<form method="post" action="/beheer/login">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <p><label>Wachtwoord<br><input type="password" name="wachtwoord" autocomplete="current-password" autofocus></label></p>
+  <button>Inloggen</button>
+</form>
+{% endblock %}

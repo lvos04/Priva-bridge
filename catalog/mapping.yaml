@@ -1,0 +1,64 @@
+# Standaardmapping van de kas (implementatieplan v1.1, sectie 1.2), versiebeheerd.
+#
+# Wordt bij de eerste start in de database gezet. Een latere mapping-editor (slice 2) bewerkt de
+# database met geldigheidsperioden; dit bestand blijft de vastgelegde uitgangssituatie.
+#
+# Mappingstatus: bevestigd | aangenomen | unmapped
+
+versie: 1
+
+site:
+  naam: Kwekerij
+  tijdzone: Europe/Amsterdam
+
+kappen:
+  aantal: 40
+  bedden_per_kap: 6
+  oppervlakte_m2: null      # nog niet aangeleverd
+  geldig_vanaf: 2024-08-01
+
+# De nummering 1–4 in Priva is aangenomen en wordt bij de eerste import gecontroleerd (sectie 1.2).
+afdelingen:
+  - {nummer: 1, priva_code: "1", naam: Afdeling 1, kap_van: 1, kap_tot: 9, status: aangenomen}
+  - {nummer: 2, priva_code: "2", naam: Afdeling 2, kap_van: 10, kap_tot: 18, status: aangenomen}
+  - {nummer: 3, priva_code: "3", naam: Afdeling 3, kap_van: 19, kap_tot: 30, status: aangenomen}
+  - {nummer: 4, priva_code: "4", naam: Afdeling 4, kap_van: 31, kap_tot: 40, status: aangenomen}
+
+# Klimaatafdelingen die bewust niet worden geïmporteerd (bevestigd door Leon, 16-11-2026: idx 5–8 zijn
+# irrelevant). Regels voor deze afdelingen worden overgeslagen en zichtbaar geteld in de
+# importsamenvatting; een afdeling die hier niet en hierboven ook niet staat (9+) stopt de import.
+afdelingen_genegeerd:
+  - {van: 5, tot: 8, status: genegeerd, reden: "Irrelevant (bevestigd door Leon, 16-11-2026)"}
+
+# Kraan N → kap N voor 1–40 (sectie 1.2).
+kranen:
+  - {van: 1, tot: 40, kap_offset: 0, status: bevestigd, geldig_vanaf: 2024-08-01}
+
+# Open punt O1, bevestigd door Leon, 16-11-2026: kraan 41–44 = gevelkranen, kraan 45 = achtertuin.
+# Bekende bronapparaten met een eigen zone, níet aan een kap of afdeling gekoppeld; ze tellen niet
+# mee in kap- of afdelingsaggregaten en blijven opvraagbaar als bron:kraan:N.
+kranen_zonder_kap:
+  - {van: 41, tot: 44, zone: gevel, status: bevestigd, geldig_vanaf: 2024-08-01}
+  - {van: 45, tot: 45, zone: achtertuin, status: bevestigd, geldig_vanaf: 2024-08-01}
+
+# Huidige lampconfiguratie sinds augustus 2024 (open punt O5 voor eerdere configuraties).
+lichtmodules:
+  - {van: 1, tot: 40, kap_offset: 0, umol: 80, dimbaar: false, status: bevestigd, geldig_vanaf: 2024-08-01}
+  - {van: 101, tot: 140, kap_offset: 100, umol: 120, dimbaar: true, status: bevestigd, geldig_vanaf: 2024-08-01}
+
+# Overige brontypes uit de echte exports (Autonoom doek 1–8, CO2 doseerruimte 1–2, Autonome
+# verwarming 1–2, Groeilicht sturing 1–44) en onbekende kranen boven 45 krijgen bij de eerste import een
+# bronapparaat met status `unmapped`: opgeslagen en opvraagbaar als bron:<type>:<nr>.
+
+# Wat er per dag verwacht wordt om een dag "compleet" te noemen (status, kalender,
+# last_complete_date) en welke bronnen meetellen in de dekking van een kap-optelling.
+# - Klimaat: open punt O2 — de echte export bevat alleen afdeling 1. Zet op [1, 2, 3, 4] zodra het
+#   klimaatrapport alle afdelingen bevat.
+# - Belichting: de echte export bevat alleen modgroeilichtsturing 101–140. Modules 1–40 staan wel in
+#   de kasindeling (80 µmol) maar komen niet als module in het rapport voor (vraag aan Leon, zie
+#   DECISIONS.md B6). Voeg {van: 1, tot: 40} toe zodra bekend is waar ze vandaan komen.
+verwachting:
+  klimaat:
+    afdelingen: [1]
+  belichting:
+    modules: [{van: 101, tot: 140}]

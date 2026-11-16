@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block titel %}Status{% endblock %}
+{% block inhoud %}
+<h1>Status</h1>
+<div class="kaarten">
+  <div class="kaart"><div class="label">Laatste import</div><div class="waarde">{{ (st.last_import_at or '–')[:16]|replace('T',' ') }}</div></div>
+  <div class="kaart"><div class="label">Laatste complete dag</div><div class="waarde">{{ st.last_complete_date or '–' }}</div></div>
+  <div class="kaart"><div class="label">Dagen niet compleet (sinds eerste data)</div><div class="waarde">{{ st.missing_dates|length }}</div></div>
+  <div class="kaart"><div class="label">Bron</div><div class="waarde">handmatige upload</div></div>
+</div>
+<p class="zacht">Compleet = Klimaat voor afdeling {{ verwacht_afdelingen|join(', ') }} én Belichting voor {{ verwacht_modules }} lichtmodules (instelbaar in <code>catalog/mapping.yaml</code>).</p>
+
+<h2>Waarschuwingen</h2>
+{% for w in st.warnings %}<div class="melding"><strong>{{ w.code }}</strong> — {{ w.detail }}{% if w.since %} <span class="zacht">(sinds {{ w.since }})</span>{% endif %}</div>
+{% else %}<div class="melding ok">Geen waarschuwingen.</div>{% endfor %}
+
+<h2>Laatste 30 dagen</h2>
+<div class="kalender">
+{% for dag, toestand in kalender %}<div class="dag {{ toestand }}" title="{{ dag }}: {{ toestand }}">{{ dag.strftime('%d-%m') }}<br>{{ toestand }}</div>{% endfor %}
+</div>
+
+<h2>Imports</h2>
+<table>
+<tr><th>Import</th><th>Bestand</th><th>Rapport</th><th>Periode</th><th>Status</th><th>Waarden</th><th>Ontvangen</th></tr>
+{% for b in imports %}
+<tr><td><a href="/beheer/imports/{{ b.id }}">{{ b.import_id }}</a></td><td>{{ b.bestandsnaam }}</td><td>{{ b.rapportfamilie or '–' }}</td>
+<td>{{ b.periode_van or '' }}{% if b.periode_tot %} t/m {{ b.periode_tot }}{% endif %}</td>
+<td><span class="badge">{{ b.status }}</span></td><td>{{ b.aantallen.get('waarden', '–') }}</td><td>{{ b.ontvangen_op|lokaal }}</td></tr>
+{% else %}<tr><td colspan="7" class="zacht">Nog geen imports. <a href="/beheer/upload">Upload een Priva-export.</a></td></tr>{% endfor %}
+</table>
+
+<h2>API-tokens</h2>
+<p class="zacht">Tokens maak je met het opstartcommando <code>bridge token aanmaken --naam gewichtsapp --scope read:data</code> (zie README). Beheer in deze UI volgt in slice 5.</p>
+<table><tr><th>Naam</th><th>Voorvoegsel</th><th>Scopes</th><th>Laatst gebruikt</th><th>Ingetrokken</th></tr>
+{% for t in tokens %}<tr><td>{{ t.naam }}</td><td><code>{{ t.voorvoegsel }}…</code></td><td>{{ t.scopes|join(', ') }}</td><td>{{ t.laatst_gebruikt|lokaal }}</td><td>{{ t.ingetrokken_op|lokaal if t.ingetrokken_op else '' }}</td></tr>
+{% else %}<tr><td colspan="5" class="zacht">Nog geen tokens.</td></tr>{% endfor %}
+</table>
+{% endblock %}

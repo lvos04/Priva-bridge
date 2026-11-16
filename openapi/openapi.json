@@ -1,0 +1,951 @@
+{
+  "components": {
+    "schemas": {
+      "Daily": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/DailyRow"
+            },
+            "title": "Data",
+            "type": "array"
+          },
+          "freshness": {
+            "$ref": "#/components/schemas/Freshness"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "data",
+          "next_cursor",
+          "freshness"
+        ],
+        "title": "Daily",
+        "type": "object"
+      },
+      "DailyRow": {
+        "properties": {
+          "aggregation": {
+            "title": "Aggregation",
+            "type": "string"
+          },
+          "coverage": {
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Coverage",
+            "type": "number"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "import_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Import Id"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "quality": {
+            "enum": [
+              "ok",
+              "verdacht",
+              "onvolledig",
+              "ontbreekt"
+            ],
+            "title": "Quality",
+            "type": "string"
+          },
+          "resolved_from": {
+            "title": "Resolved From",
+            "type": "string"
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revision"
+          },
+          "scope": {
+            "title": "Scope",
+            "type": "string"
+          },
+          "sources": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null bij quality 'ontbreekt', nooit 0",
+            "title": "Value"
+          }
+        },
+        "required": [
+          "date",
+          "scope",
+          "metric",
+          "value",
+          "unit",
+          "aggregation",
+          "coverage",
+          "quality",
+          "resolved_from",
+          "sources",
+          "import_id",
+          "revision"
+        ],
+        "title": "DailyRow",
+        "type": "object"
+      },
+      "Freshness": {
+        "properties": {
+          "last_complete_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Laatste dag met alle verwachte bronnen (YYYY-MM-DD)",
+            "title": "Last Complete Date"
+          },
+          "last_import_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Laatste verwerkte import, lokale tijd met offset",
+            "title": "Last Import At"
+          }
+        },
+        "required": [
+          "last_import_at",
+          "last_complete_date"
+        ],
+        "title": "Freshness",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "Health": {
+        "properties": {
+          "status": {
+            "const": "ok",
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "version"
+        ],
+        "title": "Health",
+        "type": "object"
+      },
+      "MetricInfo": {
+        "properties": {
+          "aggregation": {
+            "title": "Aggregation",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "expected_unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Unit"
+          },
+          "level": {
+            "description": "Hoofdniveau: bedrijf, afdeling, kap of bron:<type>",
+            "title": "Level",
+            "type": "string"
+          },
+          "levels": {
+            "description": "Alle niveaus: bedrijf, afdeling, kap of een brontype (module, doek, ...)",
+            "items": {
+              "type": "string"
+            },
+            "title": "Levels",
+            "type": "array"
+          },
+          "metric_key": {
+            "title": "Metric Key",
+            "type": "string"
+          },
+          "priva_names": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Priva Names",
+            "type": "array"
+          },
+          "report": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "unit": {
+            "description": "Eenheid in /daily; 'onbevestigd' = waarde ongewijzigd doorgegeven (O7)",
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "metric_key",
+          "description",
+          "unit",
+          "expected_unit",
+          "level",
+          "levels",
+          "aggregation",
+          "report",
+          "status",
+          "priva_names"
+        ],
+        "title": "MetricInfo",
+        "type": "object"
+      },
+      "Metrics": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/MetricInfo"
+            },
+            "title": "Data",
+            "type": "array"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "title": "Metrics",
+        "type": "object"
+      },
+      "Problem": {
+        "properties": {
+          "detail": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "status",
+          "detail"
+        ],
+        "title": "Problem",
+        "type": "object"
+      },
+      "Status": {
+        "properties": {
+          "last_complete_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Laatste dag met alle verwachte bronnen (YYYY-MM-DD)",
+            "title": "Last Complete Date"
+          },
+          "last_import_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Laatste verwerkte import, lokale tijd met offset",
+            "title": "Last Import At"
+          },
+          "missing_dates": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Missing Dates",
+            "type": "array"
+          },
+          "source_mode": {
+            "enum": [
+              "manual",
+              "smb"
+            ],
+            "title": "Source Mode",
+            "type": "string"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/Warning"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "last_import_at",
+          "last_complete_date",
+          "missing_dates",
+          "warnings",
+          "source_mode"
+        ],
+        "title": "Status",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "Warning": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "since": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Since"
+          }
+        },
+        "required": [
+          "code",
+          "detail",
+          "since"
+        ],
+        "title": "Warning",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "description": "Alleen-lezen API met Priva-dagwaarden (implementatieplan v1.1, sectie 8).\n\n* Authenticatie: `Authorization: Bearer <token>`; scope `read:data` voor alle GET-endpoints.\n* Fouten: `application/problem+json` met `type`, `title`, `status`, `detail`.\n* Leeg is niet nul: een ontbrekende waarde is `null` met quality `ontbreekt`.\n* Datums zijn lokale datums (Europe/Amsterdam).\n",
+    "title": "Priva Bridge API",
+    "version": "v1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/koppeling/v1/datasets/{naam}": {
+      "get": {
+        "operationId": "dataset_api_koppeling_v1_datasets__naam__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "naam",
+            "required": true,
+            "schema": {
+              "title": "Naam",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sinds",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Sinds"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limiet",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limiet",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Dataset (alleen-lezen)",
+        "tags": [
+          "bedrijfskoppeling"
+        ]
+      }
+    },
+    "/api/koppeling/v1/info": {
+      "get": {
+        "operationId": "info_api_koppeling_v1_info_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "App-informatie",
+        "tags": [
+          "bedrijfskoppeling"
+        ]
+      }
+    },
+    "/api/koppeling/v1/samenvatting": {
+      "get": {
+        "operationId": "samenvatting_api_koppeling_v1_samenvatting_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Kern-KPI's en meldingen",
+        "tags": [
+          "bedrijfskoppeling"
+        ]
+      }
+    },
+    "/api/v1/daily": {
+      "get": {
+        "description": "Een gevraagde dag zonder data komt terug als regel met quality `ontbreekt` en value null. Volgorde: scope (zoals gevraagd), metric (catalogusvolgorde of zoals gevraagd), datum.",
+        "operationId": "get_daily_api_v1_daily_get",
+        "parameters": [
+          {
+            "description": "Een of meer: bedrijf, afdeling:N, kap:N, bron:<type>:N",
+            "in": "query",
+            "name": "scope",
+            "required": true,
+            "schema": {
+              "description": "Een of meer: bedrijf, afdeling:N, kap:N, bron:<type>:N",
+              "items": {
+                "type": "string"
+              },
+              "title": "Scope",
+              "type": "array"
+            }
+          },
+          {
+            "description": "Lokale datum (Europe/Amsterdam), inclusief",
+            "in": "query",
+            "name": "from",
+            "required": true,
+            "schema": {
+              "description": "Lokale datum (Europe/Amsterdam), inclusief",
+              "format": "date",
+              "title": "From",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Lokale datum (Europe/Amsterdam), inclusief",
+            "in": "query",
+            "name": "to",
+            "required": true,
+            "schema": {
+              "description": "Lokale datum (Europe/Amsterdam), inclusief",
+              "format": "date",
+              "title": "To",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Optioneel, een of meer metric-sleutels",
+            "in": "query",
+            "name": "metric",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Optioneel, een of meer metric-sleutels",
+              "title": "Metric"
+            }
+          },
+          {
+            "description": "Kap krijgt afdelingswaarden; zie resolved_from",
+            "in": "query",
+            "name": "inherit",
+            "required": false,
+            "schema": {
+              "default": false,
+              "description": "Kap krijgt afdelingswaarden; zie resolved_from",
+              "title": "Inherit",
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 500,
+              "maximum": 5000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Daily"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Ongeldig verzoek"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Geen of ongeldig token"
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Token mist de vereiste scope"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Ongeldige parameters"
+          },
+          "429": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Rate limit bereikt (zie Retry-After)"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Dagwaarden met dekking en kwaliteit",
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/api/v1/metrics": {
+      "get": {
+        "operationId": "get_metrics_api_v1_metrics_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Metrics"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Ongeldig verzoek"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Geen of ongeldig token"
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Token mist de vereiste scope"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Ongeldige parameters"
+          },
+          "429": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Rate limit bereikt (zie Retry-After)"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Catalogus met eenheid, niveau en aggregatie",
+        "tags": [
+          "catalogus"
+        ]
+      }
+    },
+    "/api/v1/status": {
+      "get": {
+        "operationId": "get_status_api_v1_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Status"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Ongeldig verzoek"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Geen of ongeldig token"
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Token mist de vereiste scope"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Ongeldige parameters"
+          },
+          "429": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Rate limit bereikt (zie Retry-After)"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Laatste import, laatste complete dag, achterstand, waarschuwingen",
+        "tags": [
+          "status"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Leeft de app",
+        "tags": [
+          "status"
+        ]
+      }
+    }
+  }
+}

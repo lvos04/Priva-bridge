@@ -1,0 +1,925 @@
+# Meetwaardencatalogus van de Priva Bridge (implementatieplan v1.1, sectie 5).
+#
+# Versiebeheerd en de enige bron voor:
+#   - welke Priva-labels de Bridge kent (een onbekend label/objecttype stopt de import van het bestand);
+#   - welke labels bewust worden overgeslagen (alleen als ze leeg zijn of een bekende nepwaarde hebben);
+#   - eenheid, niveau en aggregatie die de API meegeeft.
+# Uitbreiden kan zonder codewijziging: voeg een metric of een `priva`-regel toe en herstart de app.
+#
+# Opgesteld tegen de echte exports Klimaat (week 46 2026) en Belichting (week 46 2025); zie DECISIONS.md.
+#
+# Velden per metric:
+#   key            stabiele sleutel in de API (wijzigen = breaking change)
+#   rapport        rapportfamilie waaruit de waarde komt
+#   niveaus        afdeling | kap | bedrijf | een brontype (module, doek, doseerruimte, verwarming,
+#                  groeilicht, kraan); `kap` bij een module-metric = optelling per kap (kap_rollup)
+#   eenheid        eenheid in de API; `onbevestigd` = waarde ongewijzigd doorgegeven (open punt O7),
+#                  `verwachte_eenheid` is dan alleen documentatie
+#   aggregatie     mean | min | max | sum | time_weighted_mean (zoals Priva de dagwaarde levert)
+#   status         gezien (in de echte export) | bevestigen (betekenis/eenheid nog bevestigen) |
+#                  ontbreekt (nog in geen rapport) | afgeleid_vanaf_slice_2 (berekend door de Bridge)
+#   plausibel      buiten dit bereik krijgt een waarde kwaliteit `verdacht` (waarde blijft bewaard)
+#   max_dagduur    seconden per dag: meer dan de lengte van die lokale dag (23/24/25 uur) = `verdacht`
+#   priva          regels label/type_1[/type_2/idx_2]; een rij past als alle opgegeven velden gelijk zijn
+
+versie: 1
+bron_types: {Afdeling: afdeling, modgroeilichtsturing: module, Groeilicht sturing: groeilicht, Autonoom doek: doek, CO2 doseerruimte: doseerruimte,
+  Autonome verwarming: verwarming, Kraan: kraan}
+rapportfamilies:
+  klimaat: {naam: Klimaat, ondersteund_vanaf_slice: 1}
+  belichting: {naam: Belichting, ondersteund_vanaf_slice: 1}
+  kranen: {naam: Kranen, ondersteund_vanaf_slice: 2}
+  algemeen_bedrijf: {naam: Algemeen Bedrijf, ondersteund_vanaf_slice: 2}
+  algemeen_afdeling: {naam: Algemeen Afdeling, ondersteund_vanaf_slice: 2}
+genegeerd:
+- label: Sum_24h_CalculatedPAR
+  toegestaan: ['']
+  reden: Altijd lege kolom (sectie 5)
+- label: Sum_24h_MeasuredRadiation
+  toegestaan: ['']
+  reden: Altijd lege kolom (sectie 5)
+- label: Sum_24h_Energy_Water
+  toegestaan: ['']
+  reden: Altijd lege kolom (sectie 5)
+- label: Sum_24h_Energy_Water_Autonomous
+  toegestaan: ['']
+  reden: Altijd lege kolom
+- label: Sum_24h_MeasuredPAR
+  toegestaan: ['', '0']
+  reden: 'Geen PAR-meter: leeg of 0 (sectie 5)'
+- label: Ave_24h_CompCO2
+  toegestaan: ['', '0']
+  reden: 'Geen CO2-meter: CompCO2 is 0 (open punt O8)'
+- label: Sum_Day_CalculatedPAR
+  toegestaan: ['']
+  reden: Altijd lege kolom (sectie 5)
+- label: Sum_Day_MeasuredRadiation
+  toegestaan: ['']
+  reden: Altijd lege kolom (sectie 5)
+- label: Sum_Day_Energy_Water
+  toegestaan: ['']
+  reden: Altijd lege kolom (sectie 5)
+- label: Sum_Day_Energy_Water_Autonomous
+  toegestaan: ['']
+  reden: Altijd lege kolom
+- label: Sum_Day_MeasuredPAR
+  toegestaan: ['', '0']
+  reden: 'Geen PAR-meter: leeg of 0 (sectie 5)'
+- label: Ave_Day_CompCO2
+  toegestaan: ['', '0']
+  reden: 'Geen CO2-meter: CompCO2 is 0 (open punt O8)'
+- label: Sum_Night_CalculatedPAR
+  toegestaan: ['']
+  reden: Altijd lege kolom (sectie 5)
+- label: Sum_Night_MeasuredRadiation
+  toegestaan: ['']
+  reden: Altijd lege kolom (sectie 5)
+- label: Sum_Night_Energy_Water
+  toegestaan: ['']
+  reden: Altijd lege kolom (sectie 5)
+- label: Sum_Night_Energy_Water_Autonomous
+  toegestaan: ['']
+  reden: Altijd lege kolom
+- label: Sum_Night_MeasuredPAR
+  toegestaan: ['', '0']
+  reden: 'Geen PAR-meter: leeg of 0 (sectie 5)'
+- label: Ave_Night_CompCO2
+  toegestaan: ['', '0']
+  reden: 'Geen CO2-meter: CompCO2 is 0 (open punt O8)'
+metrics:
+- key: temp_etmaal_avg
+  omschrijving: Kastemperatuur, etmaal, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: mean
+  status: gezien
+  plausibel: &id001 {min: -40, max: 65}
+  priva:
+  - {label: Ave_24h_CompTemp, type_1: Afdeling}
+- key: temp_etmaal_min
+  omschrijving: Kastemperatuur, etmaal, minimum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: min
+  status: gezien
+  plausibel: *id001
+  priva:
+  - {label: Min_24h_CompTemp, type_1: Afdeling}
+- key: temp_etmaal_max
+  omschrijving: Kastemperatuur, etmaal, maximum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: max
+  status: gezien
+  plausibel: *id001
+  priva:
+  - {label: Max_24h_CompTemp, type_1: Afdeling}
+- key: temp_dag_avg
+  omschrijving: Kastemperatuur, dagperiode, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: mean
+  status: gezien
+  plausibel: *id001
+  priva:
+  - {label: Ave_Day_CompTemp, type_1: Afdeling}
+- key: temp_dag_min
+  omschrijving: Kastemperatuur, dagperiode, minimum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: min
+  status: gezien
+  plausibel: *id001
+  priva:
+  - {label: Min_Day_CompTemp, type_1: Afdeling}
+- key: temp_dag_max
+  omschrijving: Kastemperatuur, dagperiode, maximum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: max
+  status: gezien
+  plausibel: *id001
+  priva:
+  - {label: Max_Day_CompTemp, type_1: Afdeling}
+- key: temp_nacht_avg
+  omschrijving: Kastemperatuur, nachtperiode, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: mean
+  status: gezien
+  plausibel: *id001
+  priva:
+  - {label: Ave_Night_CompTemp, type_1: Afdeling}
+- key: temp_nacht_min
+  omschrijving: Kastemperatuur, nachtperiode, minimum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: min
+  status: gezien
+  plausibel: *id001
+  priva:
+  - {label: Min_Night_CompTemp, type_1: Afdeling}
+- key: temp_nacht_max
+  omschrijving: Kastemperatuur, nachtperiode, maximum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: max
+  status: gezien
+  plausibel: *id001
+  priva:
+  - {label: Max_Night_CompTemp, type_1: Afdeling}
+- key: rv_avg
+  omschrijving: Relatieve luchtvochtigheid, etmaal, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: '%'
+  aggregatie: mean
+  status: gezien
+  plausibel: &id002 {min: 0, max: 100}
+  priva:
+  - {label: Ave_24h_CompRV, type_1: Afdeling}
+- key: rv_etmaal_min
+  omschrijving: Relatieve luchtvochtigheid, etmaal, minimum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: '%'
+  aggregatie: min
+  status: gezien
+  plausibel: *id002
+  priva:
+  - {label: Min_24h_CompRV, type_1: Afdeling}
+- key: rv_etmaal_max
+  omschrijving: Relatieve luchtvochtigheid, etmaal, maximum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: '%'
+  aggregatie: max
+  status: gezien
+  plausibel: *id002
+  priva:
+  - {label: Max_24h_CompRV, type_1: Afdeling}
+- key: rv_dag_avg
+  omschrijving: Relatieve luchtvochtigheid, dagperiode, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: '%'
+  aggregatie: mean
+  status: gezien
+  plausibel: *id002
+  priva:
+  - {label: Ave_Day_CompRV, type_1: Afdeling}
+- key: rv_dag_min
+  omschrijving: Relatieve luchtvochtigheid, dagperiode, minimum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: '%'
+  aggregatie: min
+  status: gezien
+  plausibel: *id002
+  priva:
+  - {label: Min_Day_CompRV, type_1: Afdeling}
+- key: rv_dag_max
+  omschrijving: Relatieve luchtvochtigheid, dagperiode, maximum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: '%'
+  aggregatie: max
+  status: gezien
+  plausibel: *id002
+  priva:
+  - {label: Max_Day_CompRV, type_1: Afdeling}
+- key: rv_nacht_avg
+  omschrijving: Relatieve luchtvochtigheid, nachtperiode, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: '%'
+  aggregatie: mean
+  status: gezien
+  plausibel: *id002
+  priva:
+  - {label: Ave_Night_CompRV, type_1: Afdeling}
+- key: rv_nacht_min
+  omschrijving: Relatieve luchtvochtigheid, nachtperiode, minimum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: '%'
+  aggregatie: min
+  status: gezien
+  plausibel: *id002
+  priva:
+  - {label: Min_Night_CompRV, type_1: Afdeling}
+- key: rv_nacht_max
+  omschrijving: Relatieve luchtvochtigheid, nachtperiode, maximum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: '%'
+  aggregatie: max
+  status: gezien
+  plausibel: *id002
+  priva:
+  - {label: Max_Night_CompRV, type_1: Afdeling}
+- key: vochtdeficit_avg
+  omschrijving: Vochtdeficit, etmaal, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: mean
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Ave_24h_CompHD, type_1: Afdeling}
+- key: vochtdeficit_etmaal_min
+  omschrijving: Vochtdeficit, etmaal, minimum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: min
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Min_24h_CompHD, type_1: Afdeling}
+- key: vochtdeficit_etmaal_max
+  omschrijving: Vochtdeficit, etmaal, maximum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: max
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Max_24h_CompHD, type_1: Afdeling}
+- key: vochtdeficit_dag_avg
+  omschrijving: Vochtdeficit, dagperiode, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: mean
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Ave_Day_CompHD, type_1: Afdeling}
+- key: vochtdeficit_dag_min
+  omschrijving: Vochtdeficit, dagperiode, minimum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: min
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Min_Day_CompHD, type_1: Afdeling}
+- key: vochtdeficit_dag_max
+  omschrijving: Vochtdeficit, dagperiode, maximum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: max
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Max_Day_CompHD, type_1: Afdeling}
+- key: vochtdeficit_nacht_avg
+  omschrijving: Vochtdeficit, nachtperiode, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: mean
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Ave_Night_CompHD, type_1: Afdeling}
+- key: vochtdeficit_nacht_min
+  omschrijving: Vochtdeficit, nachtperiode, minimum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: min
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Min_Night_CompHD, type_1: Afdeling}
+- key: vochtdeficit_nacht_max
+  omschrijving: Vochtdeficit, nachtperiode, maximum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: max
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Max_Night_CompHD, type_1: Afdeling}
+- key: abs_vocht_avg
+  omschrijving: Absoluut vocht, etmaal, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: mean
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Ave_24h_CompAV, type_1: Afdeling}
+- key: abs_vocht_etmaal_min
+  omschrijving: Absoluut vocht, etmaal, minimum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: min
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Min_24h_CompAV, type_1: Afdeling}
+- key: abs_vocht_etmaal_max
+  omschrijving: Absoluut vocht, etmaal, maximum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: max
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Max_24h_CompAV, type_1: Afdeling}
+- key: abs_vocht_dag_avg
+  omschrijving: Absoluut vocht, dagperiode, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: mean
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Ave_Day_CompAV, type_1: Afdeling}
+- key: abs_vocht_dag_min
+  omschrijving: Absoluut vocht, dagperiode, minimum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: min
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Min_Day_CompAV, type_1: Afdeling}
+- key: abs_vocht_dag_max
+  omschrijving: Absoluut vocht, dagperiode, maximum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: max
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Max_Day_CompAV, type_1: Afdeling}
+- key: abs_vocht_nacht_avg
+  omschrijving: Absoluut vocht, nachtperiode, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: mean
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Ave_Night_CompAV, type_1: Afdeling}
+- key: abs_vocht_nacht_min
+  omschrijving: Absoluut vocht, nachtperiode, minimum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: min
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Min_Night_CompAV, type_1: Afdeling}
+- key: abs_vocht_nacht_max
+  omschrijving: Absoluut vocht, nachtperiode, maximum
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: max
+  status: bevestigen
+  verwachte_eenheid: g/m³
+  priva:
+  - {label: Max_Night_CompAV, type_1: Afdeling}
+- key: dauwpuntsverschil_avg
+  omschrijving: Dauwpuntsverschil, etmaal, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: mean
+  status: gezien
+  priva:
+  - {label: Ave_24h_DewPointDifference, type_1: Afdeling}
+- key: dauwpuntsverschil_dag_avg
+  omschrijving: Dauwpuntsverschil, dagperiode, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: mean
+  status: gezien
+  priva:
+  - {label: Ave_Day_DewPointDifference, type_1: Afdeling}
+- key: dauwpuntsverschil_nacht_avg
+  omschrijving: Dauwpuntsverschil, nachtperiode, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: mean
+  status: gezien
+  priva:
+  - {label: Ave_Night_DewPointDifference, type_1: Afdeling}
+- key: extratemp1_etmaal_avg
+  omschrijving: 'Extra temperatuurmeting 1, etmaal, gemiddelde (welke sensor: bevestigen)'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: mean
+  status: bevestigen
+  plausibel: {min: -40, max: 65}
+  priva:
+  - {label: Ave_24h_ExtraTemp, type_1: Afdeling, type_2: extratemperatuur, idx_2: '1'}
+- key: extratemp1_etmaal_min
+  omschrijving: 'Extra temperatuurmeting 1, etmaal, minimum (welke sensor: bevestigen)'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: min
+  status: bevestigen
+  plausibel: {min: -40, max: 65}
+  priva:
+  - {label: Min_24h_ExtraTemp, type_1: Afdeling, type_2: extratemperatuur, idx_2: '1'}
+- key: extratemp1_etmaal_max
+  omschrijving: 'Extra temperatuurmeting 1, etmaal, maximum (welke sensor: bevestigen)'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: max
+  status: bevestigen
+  plausibel: {min: -40, max: 65}
+  priva:
+  - {label: Max_24h_ExtraTemp, type_1: Afdeling, type_2: extratemperatuur, idx_2: '1'}
+- key: extratemp1_dag_avg
+  omschrijving: 'Extra temperatuurmeting 1, dagperiode, gemiddelde (welke sensor: bevestigen)'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: mean
+  status: bevestigen
+  plausibel: {min: -40, max: 65}
+  priva:
+  - {label: Ave_Day_ExtraTemp, type_1: Afdeling, type_2: extratemperatuur, idx_2: '1'}
+- key: extratemp1_dag_min
+  omschrijving: 'Extra temperatuurmeting 1, dagperiode, minimum (welke sensor: bevestigen)'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: min
+  status: bevestigen
+  plausibel: {min: -40, max: 65}
+  priva:
+  - {label: Min_Day_ExtraTemp, type_1: Afdeling, type_2: extratemperatuur, idx_2: '1'}
+- key: extratemp1_dag_max
+  omschrijving: 'Extra temperatuurmeting 1, dagperiode, maximum (welke sensor: bevestigen)'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: max
+  status: bevestigen
+  plausibel: {min: -40, max: 65}
+  priva:
+  - {label: Max_Day_ExtraTemp, type_1: Afdeling, type_2: extratemperatuur, idx_2: '1'}
+- key: extratemp1_nacht_avg
+  omschrijving: 'Extra temperatuurmeting 1, nachtperiode, gemiddelde (welke sensor: bevestigen)'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: mean
+  status: bevestigen
+  plausibel: {min: -40, max: 65}
+  priva:
+  - {label: Ave_Night_ExtraTemp, type_1: Afdeling, type_2: extratemperatuur, idx_2: '1'}
+- key: extratemp1_nacht_min
+  omschrijving: 'Extra temperatuurmeting 1, nachtperiode, minimum (welke sensor: bevestigen)'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: min
+  status: bevestigen
+  plausibel: {min: -40, max: 65}
+  priva:
+  - {label: Min_Night_ExtraTemp, type_1: Afdeling, type_2: extratemperatuur, idx_2: '1'}
+- key: extratemp1_nacht_max
+  omschrijving: 'Extra temperatuurmeting 1, nachtperiode, maximum (welke sensor: bevestigen)'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: max
+  status: bevestigen
+  plausibel: {min: -40, max: 65}
+  priva:
+  - {label: Max_Night_ExtraTemp, type_1: Afdeling, type_2: extratemperatuur, idx_2: '1'}
+- key: verwarming1_watertemp_etmaal_avg
+  omschrijving: Watertemperatuur verwarmingsnet 1, etmaal, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: mean
+  status: gezien
+  plausibel: {min: -10, max: 100}
+  priva:
+  - {label: Ave_24h_WaterTemp, type_1: Afdeling, type_2: Verwarming, idx_2: '1'}
+- key: verwarming1_watertemp_dag_avg
+  omschrijving: Watertemperatuur verwarmingsnet 1, dagperiode, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: mean
+  status: gezien
+  plausibel: {min: -10, max: 100}
+  priva:
+  - {label: Ave_Day_WaterTemp, type_1: Afdeling, type_2: Verwarming, idx_2: '1'}
+- key: verwarming1_watertemp_nacht_avg
+  omschrijving: Watertemperatuur verwarmingsnet 1, nachtperiode, gemiddelde
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: °C
+  aggregatie: mean
+  status: gezien
+  plausibel: {min: -10, max: 100}
+  priva:
+  - {label: Ave_Night_WaterTemp, type_1: Afdeling, type_2: Verwarming, idx_2: '1'}
+- key: autonome_verwarming_watertemp_etmaal_avg
+  omschrijving: Watertemperatuur autonome verwarming, etmaal, gemiddelde (bron:verwarming:N, nog unmapped)
+  rapport: klimaat
+  niveaus: [verwarming]
+  eenheid: °C
+  aggregatie: mean
+  status: bevestigen
+  plausibel: {min: -10, max: 100}
+  priva:
+  - {label: Ave_24h_WaterTemp_Autonomous, type_1: Autonome verwarming}
+- key: autonome_verwarming_watertemp_dag_avg
+  omschrijving: Watertemperatuur autonome verwarming, dagperiode, gemiddelde (bron:verwarming:N, nog unmapped)
+  rapport: klimaat
+  niveaus: [verwarming]
+  eenheid: °C
+  aggregatie: mean
+  status: bevestigen
+  plausibel: {min: -10, max: 100}
+  priva:
+  - {label: Ave_Day_WaterTemp_Autonomous, type_1: Autonome verwarming}
+- key: autonome_verwarming_watertemp_nacht_avg
+  omschrijving: Watertemperatuur autonome verwarming, nachtperiode, gemiddelde (bron:verwarming:N, nog unmapped)
+  rapport: klimaat
+  niveaus: [verwarming]
+  eenheid: °C
+  aggregatie: mean
+  status: bevestigen
+  plausibel: {min: -10, max: 100}
+  priva:
+  - {label: Ave_Night_WaterTemp_Autonomous, type_1: Autonome verwarming}
+- key: straling_som_berekend
+  omschrijving: 'Berekende stralingssom (of lampen meetellen: bevestigen), etmaal'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: sum
+  status: bevestigen
+  verwachte_eenheid: J/cm²
+  priva:
+  - {label: Sum_24h_CalculatedRadiation, type_1: Afdeling}
+- key: straling_som_berekend_dag
+  omschrijving: 'Berekende stralingssom (of lampen meetellen: bevestigen), dagperiode'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: sum
+  status: bevestigen
+  verwachte_eenheid: J/cm²
+  priva:
+  - {label: Sum_Day_CalculatedRadiation, type_1: Afdeling}
+- key: straling_som_berekend_nacht
+  omschrijving: 'Berekende stralingssom (of lampen meetellen: bevestigen), nachtperiode'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: sum
+  status: bevestigen
+  verwachte_eenheid: J/cm²
+  priva:
+  - {label: Sum_Night_CalculatedRadiation, type_1: Afdeling}
+- key: par_som_lampen
+  omschrijving: PAR-som van de groeilampen, etmaal
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: sum
+  status: bevestigen
+  verwachte_eenheid: mol/m²
+  priva:
+  - {label: Sum_24h_PAR_Growlight, type_1: Afdeling}
+- key: par_som_lampen_dag
+  omschrijving: PAR-som van de groeilampen, dagperiode
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: sum
+  status: bevestigen
+  verwachte_eenheid: mol/m²
+  priva:
+  - {label: Sum_Day_PAR_Growlight, type_1: Afdeling}
+- key: par_som_lampen_nacht
+  omschrijving: PAR-som van de groeilampen, nachtperiode
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: sum
+  status: bevestigen
+  verwachte_eenheid: mol/m²
+  priva:
+  - {label: Sum_Night_PAR_Growlight, type_1: Afdeling}
+- key: groeilicht_som
+  omschrijving: 'Groeilichtsom (betekenis en eenheid: bevestigen), etmaal'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: sum
+  status: bevestigen
+  priva:
+  - {label: Sum_24h_Growlight, type_1: Afdeling}
+- key: groeilicht_som_dag
+  omschrijving: 'Groeilichtsom (betekenis en eenheid: bevestigen), dagperiode'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: sum
+  status: bevestigen
+  priva:
+  - {label: Sum_Day_Growlight, type_1: Afdeling}
+- key: groeilicht_som_nacht
+  omschrijving: 'Groeilichtsom (betekenis en eenheid: bevestigen), nachtperiode'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: onbevestigd
+  aggregatie: sum
+  status: bevestigen
+  priva:
+  - {label: Sum_Night_Growlight, type_1: Afdeling}
+- key: groeilicht_seconden
+  omschrijving: Groeilichturen per etmaal, afdeling (in seconden)
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: s
+  aggregatie: sum
+  status: bevestigen
+  max_dagduur: true
+  priva:
+  - {label: Sum_24h_GrowlightHours, type_1: Afdeling}
+- key: scherm_seconden_doek1
+  omschrijving: 'Schermseconden doek 1 per afdeling (welk doek verduistert: open punt O6)'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: s
+  aggregatie: sum
+  status: bevestigen
+  max_dagduur: true
+  priva:
+  - {label: Sum_24h_CurtainHours, type_1: Afdeling, type_2: Doek, idx_2: '1'}
+- key: scherm_seconden_doek2
+  omschrijving: 'Schermseconden doek 2 per afdeling (welk doek verduistert: open punt O6)'
+  rapport: klimaat
+  niveaus: [afdeling]
+  eenheid: s
+  aggregatie: sum
+  status: bevestigen
+  max_dagduur: true
+  priva:
+  - {label: Sum_24h_CurtainHours, type_1: Afdeling, type_2: Doek, idx_2: '2'}
+- key: scherm_autonoom_seconden_doek1
+  omschrijving: 'Autonoom doek, seconden doek 1 (bron:doek:1–8, betekenis: open punt O6)'
+  rapport: klimaat
+  niveaus: [doek]
+  eenheid: s
+  aggregatie: sum
+  status: bevestigen
+  max_dagduur: true
+  priva:
+  - {label: Sum_24h_AutonomousCurtainHours, type_1: Autonoom doek, type_2: Doek, idx_2: '1'}
+- key: scherm_autonoom_seconden_doek2
+  omschrijving: 'Autonoom doek, seconden doek 2 (bron:doek:1–8, betekenis: open punt O6)'
+  rapport: klimaat
+  niveaus: [doek]
+  eenheid: s
+  aggregatie: sum
+  status: bevestigen
+  max_dagduur: true
+  priva:
+  - {label: Sum_24h_AutonomousCurtainHours, type_1: Autonoom doek, type_2: Doek, idx_2: '2'}
+- key: co2_dosering
+  omschrijving: CO2-dosering per doseerruimte (Priva levert een etmaalsom; geen gemeten CO2, open punt O8)
+  rapport: klimaat
+  niveaus: [doseerruimte]
+  eenheid: onbevestigd
+  aggregatie: sum
+  status: bevestigen
+  priva:
+  - {label: Sum_24h_CO2Prog, type_1: CO2 doseerruimte}
+- key: lamp_brandseconden
+  omschrijving: 'Brandseconden, lichtmodule kanaal 1 (betekenis kanalen: open punt O4)'
+  rapport: belichting
+  niveaus: [module, kap]
+  eenheid: s
+  aggregatie: sum
+  status: gezien
+  max_dagduur: true
+  kap_rollup: sum
+  priva:
+  - {label: Sum_24h_ModGrowlightSysHours, type_1: modgroeilichtsturing, type_2: kanaal, idx_2: '1'}
+- key: lamp_brandseconden_kanaal2
+  omschrijving: 'Brandseconden, lichtmodule kanaal 2 (betekenis kanalen: open punt O4)'
+  rapport: belichting
+  niveaus: [module, kap]
+  eenheid: s
+  aggregatie: sum
+  status: gezien
+  max_dagduur: true
+  kap_rollup: sum
+  priva:
+  - {label: Sum_24h_ModGrowlightSysHours, type_1: modgroeilichtsturing, type_2: kanaal, idx_2: '2'}
+- key: lamp_stand
+  omschrijving: 'Lampstand, lichtmodule kanaal 1 (betekenis kanalen: open punt O4)'
+  rapport: belichting
+  niveaus: [module]
+  eenheid: '%'
+  aggregatie: time_weighted_mean
+  status: gezien
+  plausibel: &id003 {min: 0, max: 100}
+  priva:
+  - {label: Ave_24h_ModGrowlightPosition, type_1: modgroeilichtsturing, type_2: kanaal, idx_2: '1'}
+- key: lamp_stand_kanaal2
+  omschrijving: 'Lampstand, lichtmodule kanaal 2 (betekenis kanalen: open punt O4)'
+  rapport: belichting
+  niveaus: [module]
+  eenheid: '%'
+  aggregatie: time_weighted_mean
+  status: gezien
+  plausibel: *id003
+  priva:
+  - {label: Ave_24h_ModGrowlightPosition, type_1: modgroeilichtsturing, type_2: kanaal, idx_2: '2'}
+- key: lamp_par
+  omschrijving: 'PAR (of beide lamptypes meetellen: open punt O4), lichtmodule kanaal 1 (betekenis kanalen: open punt O4)'
+  rapport: belichting
+  niveaus: [module]
+  eenheid: µmol/m²/s
+  aggregatie: mean
+  status: bevestigen
+  priva:
+  - {label: Ave_24h_ModGrowlightPAR, type_1: modgroeilichtsturing, type_2: kanaal, idx_2: '1'}
+- key: lamp_par_kanaal2
+  omschrijving: 'PAR (of beide lamptypes meetellen: open punt O4), lichtmodule kanaal 2 (betekenis kanalen: open punt O4)'
+  rapport: belichting
+  niveaus: [module]
+  eenheid: µmol/m²/s
+  aggregatie: mean
+  status: bevestigen
+  priva:
+  - {label: Ave_24h_ModGrowlightPAR, type_1: modgroeilichtsturing, type_2: kanaal, idx_2: '2'}
+- key: lamp_straling
+  omschrijving: 'Straling (betekenis en eenheid: bevestigen), lichtmodule kanaal 1 (betekenis kanalen: open punt O4)'
+  rapport: belichting
+  niveaus: [module]
+  eenheid: onbevestigd
+  aggregatie: mean
+  status: bevestigen
+  priva:
+  - {label: Ave_24h_ModGrowlightRadiation, type_1: modgroeilichtsturing, type_2: kanaal, idx_2: '1'}
+- key: lamp_straling_kanaal2
+  omschrijving: 'Straling (betekenis en eenheid: bevestigen), lichtmodule kanaal 2 (betekenis kanalen: open punt O4)'
+  rapport: belichting
+  niveaus: [module]
+  eenheid: onbevestigd
+  aggregatie: mean
+  status: bevestigen
+  priva:
+  - {label: Ave_24h_ModGrowlightRadiation, type_1: modgroeilichtsturing, type_2: kanaal, idx_2: '2'}
+- key: lamp_energie
+  omschrijving: 'Elektrische energie (eenheid: bevestigen), lichtmodule kanaal 1 (betekenis kanalen: open punt O4)'
+  rapport: belichting
+  niveaus: [module]
+  eenheid: onbevestigd
+  aggregatie: sum
+  status: bevestigen
+  priva:
+  - {label: Sum_24h_ModGrowlightElectricalEnergy, type_1: modgroeilichtsturing, type_2: kanaal, idx_2: '1'}
+- key: lamp_energie_kanaal2
+  omschrijving: 'Elektrische energie (eenheid: bevestigen), lichtmodule kanaal 2 (betekenis kanalen: open punt O4)'
+  rapport: belichting
+  niveaus: [module]
+  eenheid: onbevestigd
+  aggregatie: sum
+  status: bevestigen
+  priva:
+  - {label: Sum_24h_ModGrowlightElectricalEnergy, type_1: modgroeilichtsturing, type_2: kanaal, idx_2: '2'}
+- key: groeilicht_brandseconden_streng1
+  omschrijving: Brandseconden groeilichtsturing, streng 1 (bron:groeilicht:1–44, nog unmapped)
+  rapport: belichting
+  niveaus: [groeilicht]
+  eenheid: s
+  aggregatie: sum
+  status: bevestigen
+  max_dagduur: true
+  priva:
+  - {label: Sum_24h_GrowlightSysHours, type_1: Groeilicht sturing, type_2: Streng, idx_2: '1'}
+- key: groeilicht_brandseconden_streng2
+  omschrijving: Brandseconden groeilichtsturing, streng 2 (bron:groeilicht:1–44, nog unmapped)
+  rapport: belichting
+  niveaus: [groeilicht]
+  eenheid: s
+  aggregatie: sum
+  status: bevestigen
+  max_dagduur: true
+  priva:
+  - {label: Sum_24h_GrowlightSysHours, type_1: Groeilicht sturing, type_2: Streng, idx_2: '2'}
+- key: groeilicht_brandseconden_streng3
+  omschrijving: Brandseconden groeilichtsturing, streng 3 (bron:groeilicht:1–44, nog unmapped)
+  rapport: belichting
+  niveaus: [groeilicht]
+  eenheid: s
+  aggregatie: sum
+  status: bevestigen
+  max_dagduur: true
+  priva:
+  - {label: Sum_24h_GrowlightSysHours, type_1: Groeilicht sturing, type_2: Streng, idx_2: '3'}
+- key: groeilicht_brandseconden_streng4
+  omschrijving: Brandseconden groeilichtsturing, streng 4 (bron:groeilicht:1–44, nog unmapped)
+  rapport: belichting
+  niveaus: [groeilicht]
+  eenheid: s
+  aggregatie: sum
+  status: bevestigen
+  max_dagduur: true
+  priva:
+  - {label: Sum_24h_GrowlightSysHours, type_1: Groeilicht sturing, type_2: Streng, idx_2: '4'}
+- key: lichtsom_lampen_kap
+  omschrijving: 'Afgeleide lichtsom van de lampen per kap: per lamptype brandseconden x stand/100 x umol / 1e6, opgeteld over beide lamptypes
+    (sectie 5). Wordt vanaf slice 2 berekend; in slice 1 altijd ontbreekt.'
+  rapport: null
+  niveaus: [kap]
+  eenheid: mol/m²/dag
+  aggregatie: sum
+  status: afgeleid_vanaf_slice_2
+  priva: []
+- key: buitenstraling_som
+  omschrijving: Buitenstraling weerstation, dagsom (open punt O3; zit nog in geen geïmporteerd rapport)
+  rapport: null
+  niveaus: [bedrijf]
+  eenheid: J/cm²/dag
+  aggregatie: sum
+  status: ontbreekt
+  priva: []

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block titel %}Bedrijfskoppeling{% endblock %}
+{% block inhoud %}
+<h1>Bedrijfskoppeling</h1>
+<p>Alleen-lezen samenvatting voor het Bedrijfsdashboard via <code>/api/koppeling/v1</code>. Koppelsleutels staan los van de API-tokens.</p>
+<form method="post" action="/beheer/koppeling/schakelaar">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <input type="hidden" name="aan" value="{{ '0' if ingeschakeld else '1' }}">
+  <p>Bedrijfskoppeling ingeschakeld: <strong>{{ 'aan' if ingeschakeld else 'uit' }}</strong>
+  <button class="licht">{{ 'Uitschakelen' if ingeschakeld else 'Inschakelen' }}</button></p>
+</form>
+{% if nieuwe_sleutel %}
+<div class="melding ok"><strong>Nieuwe sleutel — alleen nu zichtbaar:</strong><br><code>{{ nieuwe_sleutel }}</code></div>
+{% endif %}
+<h2>Koppelsleutels</h2>
+<table><tr><th>Naam</th><th>Voorvoegsel</th><th>Aangemaakt</th><th>Laatst gebruikt</th><th>Status</th><th></th></tr>
+{% for s in sleutels %}
+<tr><td>{{ s.naam }}</td><td><code>{{ s.voorvoegsel }}…</code></td><td>{{ s.aangemaakt_op|lokaal }}</td><td>{{ s.laatst_gebruikt_op|lokaal }}</td>
+<td>{{ 'ingetrokken' if s.ingetrokken_op else 'actief' }}</td>
+<td>{% if not s.ingetrokken_op %}<form class="inline" method="post" action="/beheer/koppeling/sleutels/{{ s.id }}/intrekken"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="licht">Intrekken</button></form>{% endif %}</td></tr>
+{% else %}<tr><td colspan="6" class="zacht">Nog geen sleutels.</td></tr>{% endfor %}
+</table>
+<form method="post" action="/beheer/koppeling/sleutels">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <p><input type="text" name="naam" placeholder="Bijv. Bedrijfsdashboard" required> <button>Sleutel aanmaken</button></p>
+</form>
+{% endblock %}
