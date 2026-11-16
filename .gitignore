@@ -1,0 +1,19 @@
+# Echte Priva-exports: alleen lokaal tot besloten is of ze in de (publieke) repository mogen
+tests/fixtures/echt/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# Lokale data
+/data/
+*.db
+*.db-wal
+*.db-shm
